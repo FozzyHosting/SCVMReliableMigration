@@ -51,6 +51,19 @@ function Read-SCVMHosts {
                         Write-Debug -Message ('Start-Sleep -Seconds {0}' -f $Timeout)
                         Start-Sleep -Seconds $Timeout
                     }
+                    Write-Debug -Message ('$_.Exception.Error.ErrorCodeString: {0}' -f $_.Exception.Error.ErrorCodeString)
+                    Write-Debug -Message 'if ($_.Exception.Error.ErrorCodeString -eq 1611)'
+                    if ($_.Exception.Error.ErrorCodeString -eq 1611) {
+                        Write-Debug -Message ('$Count = {0}' -f $Count)
+                        Write-Debug -Message ('$MaxAttempts = {0}' -f $MaxAttempts)
+                        Write-Debug -Message 'if ($Count -ge $MaxAttempts)'
+                        if ($Count -ge $MaxAttempts) {
+                            Write-Debug -Message ('{0}: $PSCmdlet.ThrowTerminatingError($_)' -f $MyInvocation.MyCommand.Name)
+                            $PSCmdlet.ThrowTerminatingError($_)
+                        }
+                        Write-Debug -Message ('Start-Sleep -Seconds {0}' -f $Timeout)
+                        Start-Sleep -Seconds $Timeout
+                    }
                     else {
                         Write-Debug -Message ('{0}: $PSCmdlet.ThrowTerminatingError($_)' -f $MyInvocation.MyCommand.Name)
                         $PSCmdlet.ThrowTerminatingError($_)
